@@ -12,7 +12,3 @@ ADD https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm /usr/local
 RUN chmod 755 /usr/local/bin/cpanm
 COPY cpanfile /tmp/cpanfile
 RUN cpanm --notest --skip-satisfied --quiet --installdeps /tmp && rm -rf /root/.cpanm
-
-RUN git clone https://github.com/mozilla-bteam/bmo /opt/bmo
-
-RUN cd /opt/bmo && perl checksetup.pl
