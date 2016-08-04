@@ -77,3 +77,4 @@ requires 'XML::Twig';
 requires 'SOAP::Lite', '0.712';
 requires 'Test::Taint';
 requires 'DBD::mysql', '4.001';
+requires 'XMLRPC::Lite';
