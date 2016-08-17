@@ -21,5 +21,7 @@ RUN wget -q https://s3.amazonaws.com/moz-devservices-bmocartons/bmo/vendor.tar.g
     tar -C /opt -zxvf /vendor.tar.gz bmo/vendor/ bmo/cpanfile bmo/cpanfile.snapshot && \
     rm /vendor.tar.gz
 
+RUN cpanm --notest --quiet Apache2::SizeLimit
 WORKDIR /opt/bmo
 RUN ./vendor/bin/carton install --cached --deployment
+ENV PERL5LIB /opt/bmo/local/lib/perl5
