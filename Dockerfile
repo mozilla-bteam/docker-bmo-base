@@ -1,13 +1,11 @@
 FROM centos:6.7
 MAINTAINER Dylan William Hardison <dylan@mozilla.com>
 
-ADD https://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm \
-    /mysql-community-release-el6-5.noarch.rpm
-
 ADD https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm /usr/local/bin/cpanm
 RUN chmod 755 /usr/local/bin/cpanm
 
-RUN yum -y install /mysql-community-release-el6-5.noarch.rpm
+RUN yum -y install https://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm && \
+    yum clean all
 
 COPY rpm_list /rpm_list
 RUN rpm -qa --queryformat '/^%{NAME}$/ d\n' > rpm_fix.sed && \
