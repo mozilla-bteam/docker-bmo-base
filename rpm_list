@@ -50,14 +50,10 @@ coreutils-libs
 cpio
 cpp
 cpuspeed
-cracklib
-cracklib-dicts
 crda
 cronie
 cronie-anacron
 crontabs
-cryptsetup-luks
-cryptsetup-luks-libs
 cups-libs
 curl
 cyrus-sasl
@@ -82,9 +78,6 @@ device-mapper-persistent-data
 dhclient
 dhcp-common
 diffutils
-dmidecode
-dmraid
-dmraid-events
 dnsmasq
 docbook-style-dsssl
 dosfstools
@@ -277,9 +270,6 @@ mailcap
 mailx
 make
 man
-man-pages
-man-pages-overrides
-mdadm
 memcached
 microcode_ctl
 mingetty
@@ -292,7 +282,6 @@ mpfr-devel
 mtr
 mysql-community-devel
 mysql-community-server
-nano
 nc
 ncurses
 ncurses-base
@@ -304,8 +293,6 @@ net-snmp-utils
 net-tools
 newt
 newt-python
-nfs-utils
-nfs-utils-lib
 nrpe
 nspr
 nss
@@ -334,9 +321,6 @@ pango
 passwd
 patch
 patchutils
-pciutils
-pciutils-libs
-pcmciautils
 pcre
 perl
 perl-core
@@ -350,7 +334,6 @@ popt
 postfix
 postgresql-libs
 ppl
-prelink
 procps
 psacct
 psmisc
