@@ -342,6 +342,9 @@ pyOpenSSL
 pygobject2
 pygpgme
 python
+python27
+python27-devel
+python27-pip
 python-argparse
 python-backports
 python-backports-ssl_match_hostname
@@ -352,7 +355,6 @@ python-dateutil
 python-dmidecode
 python-ethtool
 python-gudev
-python-importlib
 python-iniparse
 python-iwlib
 python-libs
@@ -365,7 +367,6 @@ python-requests
 python-setuptools
 python-simplejson
 python-six
-python-sphinx
 python-urlgrabber
 python-urllib3
 qstat
