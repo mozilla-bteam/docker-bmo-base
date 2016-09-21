@@ -19,6 +19,11 @@ RUN wget -q https://s3.amazonaws.com/moz-devservices-bmocartons/bmo/vendor.tar.g
     tar -C /opt -zxvf /vendor.tar.gz bmo/vendor/ bmo/cpanfile bmo/cpanfile.snapshot && \
     rm /vendor.tar.gz
 
+RUN wget -O/pari-2.1.7.tgz \
+    http://s3.amazonaws.com/moz-devservices-bmocartons/third-party/pari-2.1.7.tgz && \
+    mkdir -p /root/.cpanm/work && \
+    tar -zxf /pari-2.1.7.tgz -C /root/.cpanm/work
+
 RUN cpanm --notest --quiet Apache2::SizeLimit
 WORKDIR /opt/bmo
 RUN ./vendor/bin/carton install --cached --deployment
