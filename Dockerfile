@@ -1,31 +1,25 @@
-FROM centos:6.7
+FROM centos:7
 MAINTAINER Dylan William Hardison <dylan@mozilla.com>
 
-ADD https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm /usr/local/bin/cpanm
-RUN chmod 755 /usr/local/bin/cpanm
-
+RUN yum update -y
 COPY rpm_list /rpm_list
-RUN rpm -qa --queryformat '/^%{NAME}$/ d\n' > rpm_fix.sed && \
-    sed -f rpm_fix.sed /rpm_list > /rpm_list.clean
-
-RUN yum -y install https://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm \
-                   https://rhel6.iuscommunity.org/ius-release.rpm epel-release && \
-    yum -y install `cat /rpm_list.clean` && \
+RUN xargs yum -y install < /rpm_list && \
     yum clean all
 
-RUN pip2.7 install --upgrade pip rst2pdf sphinx
+RUN wget -q https://s3.amazonaws.com/moz-devservices-bmocartons/bmo_centos7/vendor.tar.gz -O/vendor.tar.gz && \
+    tar -C /opt -zxvf /vendor.tar.gz \
+        bmo_centos7/local/ \
+        bmo_centos7/cpanfile \
+        bmo_centos7/cpanfile.snapshot \
+        bmo_centos7/LIBS.txt \
+        && \
+    rm /vendor.tar.gz && \
+    mkdir /opt/bmo && \
+    mv /opt/bmo_centos7/* /opt/bmo && \
+    rmdir /opt/bmo_centos7
 
-RUN wget -q https://s3.amazonaws.com/moz-devservices-bmocartons/bmo/vendor.tar.gz && \
-    tar -C /opt -zxvf /vendor.tar.gz bmo/vendor/ bmo/cpanfile bmo/cpanfile.snapshot && \
-    rm /vendor.tar.gz
+ENV TEST_C_LIBS_FILE /opt/bmo/LIBS.txt
+COPY test-c-libs.t /test-c-libs.t
+RUN prove /test-c-libs.t
 
-RUN wget -O/pari-2.1.7.tgz \
-    http://s3.amazonaws.com/moz-devservices-bmocartons/third-party/pari-2.1.7.tgz && \
-    mkdir -p /root/.cpanm/work && \
-    tar -zxf /pari-2.1.7.tgz -C /root/.cpanm/work
 
-RUN cpanm --notest --quiet Apache2::SizeLimit
-WORKDIR /opt/bmo
-RUN ./vendor/bin/carton install --cached --deployment
-
-WORKDIR /
