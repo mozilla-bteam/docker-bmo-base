@@ -1,31 +1,19 @@
 FROM centos:6.7
 MAINTAINER Dylan William Hardison <dylan@mozilla.com>
 
-ADD https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm /usr/local/bin/cpanm
-RUN chmod 755 /usr/local/bin/cpanm
-
-COPY rpm_list /rpm_list
-RUN rpm -qa --queryformat '/^%{NAME}$/ d\n' > rpm_fix.sed && \
-    sed -f rpm_fix.sed /rpm_list > /rpm_list.clean
-
-RUN yum -y install https://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm \
-                   https://rhel6.iuscommunity.org/ius-release.rpm epel-release && \
-    yum -y install `cat /rpm_list.clean` && \
-    yum clean all
-
-RUN pip2.7 install --upgrade pip rst2pdf sphinx
-
-RUN wget -q https://s3.amazonaws.com/moz-devservices-bmocartons/bmo/vendor.tar.gz && \
-    tar -C /opt -zxvf /vendor.tar.gz bmo/vendor/ bmo/cpanfile bmo/cpanfile.snapshot && \
-    rm /vendor.tar.gz
-
-RUN wget -O/pari-2.1.7.tgz \
-    http://s3.amazonaws.com/moz-devservices-bmocartons/third-party/pari-2.1.7.tgz && \
-    mkdir -p /root/.cpanm/work && \
-    tar -zxf /pari-2.1.7.tgz -C /root/.cpanm/work
-
-RUN cpanm --notest --quiet Apache2::SizeLimit
-WORKDIR /opt/bmo
-RUN ./vendor/bin/carton install --cached --deployment
-
-WORKDIR /
+RUN yum update -y && \
+    yum install -y perl perl-core mod_perl httpd wget tar openssl mysql-libs gd git && \
+    curl -L https://cpanmin.us > /usr/local/bin/cpanm && \
+    chmod 755 /usr/local/bin/cpanm && \
+    mkdir -p /opt/bmo/build && \
+    rpm -qa > /tmp/rpms.list && \
+    yum install -y gcc mod_perl-devel && \
+    cpanm -l /opt/bmo/build --notest Apache2::SizeLimit && \
+    yum erase -y $(rpm -qa | diff -u - /tmp/rpms.list | sed -n '/^-[^-]/ s/^-//p') && \
+    rm -rf /opt/bmo/build/lib/perl5/{CPAN,Parse,JSON,ExtUtils} && \
+    mkdir /usr/local/share/perl5 && \
+    mv /opt/bmo/build/lib/perl5/x86_64-linux-thread-multi/ /usr/local/lib64/perl5/ && \
+    mv /opt/bmo/build/lib/perl5/Linux /usr/local/share/perl5/ && \
+    rm -vfr /opt/bmo/build && \
+    rm /tmp/rpms.list /usr/local/bin/cpanm && \
+    yum clean all -y
