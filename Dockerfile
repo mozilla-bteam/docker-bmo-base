@@ -16,4 +16,8 @@ RUN yum update -y && \
     mv /opt/bmo/build/lib/perl5/Linux /usr/local/share/perl5/ && \
     rm -vfr /opt/bmo/build && \
     rm /tmp/rpms.list /usr/local/bin/cpanm && \
-    yum clean all -y
+    yum clean all -y && \
+    useradd -u 10001 -U app -m && \
+    mkdir /app && \
+    chown app:app /app
+RUN chmod gu+s /app
